@@ -10,9 +10,6 @@ public class Redirect {
     * */
     @Test
     public void testRedirect() {
-        /*
-         *
-         * */
         Response response = RestAssured
                 .given()
                 .redirects()
