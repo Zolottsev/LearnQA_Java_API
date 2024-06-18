@@ -54,7 +54,7 @@ public class Password {
             cookies.put("auth_cookie", auth_cookie);
 
         /*
-         * Перебираем куки, пока метод не вернет фразу "You are NOT authorized".
+         * Перебираем куки, пока метод не вернет фразу "You are authorized".
          */
             Response responseForAuth = RestAssured
                     .given()
