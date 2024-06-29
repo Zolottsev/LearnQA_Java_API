@@ -1,3 +1,5 @@
+package tests.old;
+
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
@@ -19,6 +21,6 @@ public class Redirect {
                         .get("/api/long_redirect")
                 .andReturn();
         String locationHeader = response.getHeader("Location");
-        System.out.printf("Redirect destination address: %s\n", locationHeader);
+        System.out.printf("tests.old.Redirect destination address: %s\n", locationHeader);
     }
 }

@@ -1,3 +1,5 @@
+package tests.old;
+
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
@@ -26,7 +28,7 @@ public class LongRedirect {
             locationHeader = response.getHeader("Location");
             if (locationHeader!=null) {
                 iterator++;
-                System.out.printf("Redirect destination address %s: %s \n", iterator, locationHeader);
+                System.out.printf("tests.old.Redirect destination address %s: %s \n", iterator, locationHeader);
             }
         }
         System.out.printf("Count of redirects: %s\n", iterator);
