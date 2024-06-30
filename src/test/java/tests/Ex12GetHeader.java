@@ -10,16 +10,10 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-public class GetHeader {
+public class Ex12GetHeader {
     @Test
     public void testGetHeader() {
-        Map<String, String> authData = new HashMap<>();
-        authData.put("email", "vinkotov@examle.com");
-        authData.put("password", "1234");
-
         Response responseGetHeader = RestAssured
-                .given()
-                .body(authData)
                 .get("https://playground.learnqa.ru/api/homework_header")
                 .andReturn();
         Headers headers = responseGetHeader.getHeaders();
