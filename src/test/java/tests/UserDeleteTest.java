@@ -16,6 +16,9 @@ import java.util.Map;
 @Epic("Delete user cases")
 @Feature("Ex18: Тесты на DELETE")
 public class UserDeleteTest  extends BaseTestCase{
+    String cookie;
+    String header;
+    int userIdOnAuth;
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
     @Description("Ex18.1 Negative. Тест проверяет невозможность удаления пользоваетля с ID = 2")
     @DisplayName("Тест  на попытку удалить пользователя по ID 2")
@@ -27,19 +30,20 @@ public class UserDeleteTest  extends BaseTestCase{
         authData.put("password", "1234");
 
         Response responseGetAuth = apiCoreRequests.
-                makePostRequest("https://playground.learnqa.ru/api_dev/user/login/", authData);
+                makePostRequestLoginUser("https://playground.learnqa.ru/api_dev/user/login/", authData);
 
-        String header = responseGetAuth.getHeader("x-csrf-token");
-        String token = responseGetAuth.getCookie("auth_sid");
-
+        this.cookie = this.getCookie(responseGetAuth, "auth_sid");
+        this.header = this.getHeader(responseGetAuth, "x-csrf-token");
+        this.userIdOnAuth = this.getIntFromJson(responseGetAuth, "user_id");
 
         //Удаляем пользователя с ID = 2
-        Response responseDeleteUser = apiCoreRequests.makeDeleteRequest(
-                "https://playground.learnqa.ru/api_dev/user/2",
-                header,
-                token
+        Response responseDeleteUser = apiCoreRequests.
+                makeDeleteRequest("https://playground.learnqa.ru/api_dev/user/2",
+                authData,
+                this.header,
+                this.cookie
         );
-
+        //Assertions.assertResponseTextEquals(responseDeleteUser, "{\"error\":\"Please, do not delete test users with ID 1, 2, 3, 4 or 5.\"}");
         Assertions.assertResponseCodeEquals(responseDeleteUser, 400);
         Assertions.assertJsonByName(responseDeleteUser, "error","Please, do not delete test users with ID 1, 2, 3, 4 or 5.");
     }
@@ -52,10 +56,10 @@ public class UserDeleteTest  extends BaseTestCase{
         //Создаем пользователя
         Map<String, String> userData = DataGenerator.getRegistrationData();
 
-        JsonPath responseCreateAuth = apiCoreRequests.
-                makePostRequest("https://playground.learnqa.ru/api_dev/user/", userData).jsonPath();
+        Response responseCreateUser = apiCoreRequests
+                .makePostRequestLoginUser("https://playground.learnqa.ru/api_dev/user/", userData);
 
-        String userId = responseCreateAuth.getString("id");
+        String userId = responseCreateUser.jsonPath().get("id");
 
         //Авторизируемся
         Map<String, String> authData = new HashMap<>();
@@ -63,25 +67,26 @@ public class UserDeleteTest  extends BaseTestCase{
         authData.put("password", userData.get("password"));
 
         Response responseGetAuth = apiCoreRequests.
-                makePostRequest("https://playground.learnqa.ru/api_dev/user/login/", authData);
+                makePostRequestLoginUser("https://playground.learnqa.ru/api_dev/user/login/", authData);
 
-        String header = responseGetAuth.getHeader("x-csrf-token");
-        String token = responseGetAuth.getCookie("auth_sid");
+        String token = this.getHeader(responseGetAuth, "x-csrf-token");
+        String cookie = this.getCookie(responseGetAuth, "auth_sid");
 
 
         //Удаляем
         Response responseDeleteUser = apiCoreRequests.
                 makeDeleteRequest("https://playground.learnqa.ru/api_dev/user/" + userId,
-                        header,
-                        token
+                        authData,
+                        token,
+                        cookie
                 );
 
 
         //Пробуем получить данные удаленного пользователя
         Response responseUserData = apiCoreRequests.
                 makeGetRequest("https://playground.learnqa.ru/api_dev/user/" + userId,
-                        header,
-                        token);
+                        token,
+                        cookie);
 
         Assertions.assertJsonByName(responseDeleteUser, "success", "!");
         Assertions.assertResponseTextEquals(responseUserData, "User not found");
@@ -96,11 +101,10 @@ public class UserDeleteTest  extends BaseTestCase{
         //Создаем пользователя
         Map<String, String> userData = DataGenerator.getRegistrationData();
 
-        JsonPath responseCreateAuth = apiCoreRequests.
-                makePostRequest("https://playground.learnqa.ru/api_dev/user/", userData).jsonPath();
+        Response responseCreateUser = apiCoreRequests
+                .makePostRequestLoginUser("https://playground.learnqa.ru/api_dev/user/", userData);
 
-        String userId = responseCreateAuth.getString("id");
-
+        String userId = responseCreateUser.jsonPath().get("id");
 
         //Авторизируемся
         Map<String, String> authData = new HashMap<>();
@@ -108,20 +112,19 @@ public class UserDeleteTest  extends BaseTestCase{
         authData.put("password", "1234");
 
         Response responseGetAuth = apiCoreRequests.
-                makePostRequest("https://playground.learnqa.ru/api_dev/user/login/", authData);
+                makePostRequestLoginUser("https://playground.learnqa.ru/api_dev/user/login/", authData);
 
-        String header = responseGetAuth.getHeader("x-csrf-token");
-        String token = responseGetAuth.getCookie("auth_sid");
-
+        String cookie = this.getCookie(responseGetAuth, "auth_sid");
+        String token = this.getHeader(responseGetAuth, "x-csrf-token");
 
         //Удаляем
         Response responseDeleteUser = apiCoreRequests.
-                makeDeleteRequest("https://playground.learnqa.ru/api_dev/user/" + userId,
-                        header,
-                        token
+                makeDeleteRequestForDeleteAnotherUser("https://playground.learnqa.ru/api_dev/user/" + userId,
+                        token,
+                        cookie
                 );
 
-
+        //Assertions.assertResponseTextEquals(responseDeleteUser, "{\"error\":\"Please, do not delete test users with ID 1, 2, 3, 4 or 5.\"}");
         Assertions.assertResponseCodeEquals(responseDeleteUser, 400);
         Assertions.assertJsonByName(responseDeleteUser,"error", "Please, do not delete test users with ID 1, 2, 3, 4 or 5.");
 

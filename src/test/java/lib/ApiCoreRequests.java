@@ -40,7 +40,7 @@ public class ApiCoreRequests {
     }
 
     @Step("Make a POST-request  with auth data")
-    public Response makePostRequest(String url, Map<String, String> authData) {
+    public Response makePostRequestLoginUser(String url, Map<String, String> authData) {
         return given()
                 .filter(new AllureRestAssured())
                 .body(authData)
@@ -69,13 +69,25 @@ public class ApiCoreRequests {
     }
 
     @Step("Make a DELETE-request with auth data")
-    public Response makeDeleteRequest(String url, String token, String cookie) {
+    public Response makeDeleteRequest(String url,  Map<String, String> deleteData, String token, String cookie) {
         return given()
                 .filter(new AllureRestAssured())
                 .header(new Header("x-csrf-token", token))
                 .cookie("auth_sid", cookie)
+                .body(deleteData)
                 .delete(url)
                 .andReturn();
+    }
+
+    @Step("Make a DELETE-request for delete another user")
+    public Response makeDeleteRequestForDeleteAnotherUser(String url, String tokenDelAnother, String cookieDelAnother) {
+        return given()
+                .filter(new AllureRestAssured())
+                .header(new Header("x-csrf-token", tokenDelAnother))
+                .cookie("auth_sid", cookieDelAnother)
+                .delete(url)
+                .andReturn();
+
     }
 
 }

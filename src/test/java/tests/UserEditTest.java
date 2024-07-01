@@ -30,7 +30,7 @@ public class UserEditTest extends BaseTestCase {
         Map<String , String> userData = DataGenerator.getRegistrationData();
 
         JsonPath responseCreateAuth = apiCoreRequests.
-                makePostRequest("https://playground.learnqa.ru/api_dev/user/", userData).jsonPath();
+                makePostRequestLoginUser("https://playground.learnqa.ru/api_dev/user/", userData).jsonPath();
         String userId = responseCreateAuth.getString("id");
 
         //LOGIN
@@ -39,7 +39,7 @@ public class UserEditTest extends BaseTestCase {
         authData.put("password", userData.get("password"));
 
         Response responseGetAuth = apiCoreRequests.
-                makePostRequest("https://playground.learnqa.ru/api_dev/user/login/", authData);
+                makePostRequestLoginUser("https://playground.learnqa.ru/api_dev/user/login/", authData);
 
         String header = responseGetAuth.getHeader("x-csrf-token");
         String token = responseGetAuth.getCookie("auth_sid");
@@ -74,18 +74,16 @@ public class UserEditTest extends BaseTestCase {
         Assertions.assertJsonByName(responseUserData, "firstName", newName);
     }
 
-    @Description("Ex17.1 Тест проверяет изменение имени у НЕ авторизированного пользователя")
-    @DisplayName("Тест проверяет изменение имени у НЕ авторизированного пользователя")
+    @Description("Ex17.1 Negative. Тест проверяет попытку изменения данных пользователя, будучи неавторизованными")
+    @DisplayName("Тест проверяет попытку изменения данных пользователя, будучи неавторизованными")
     @Test
-    public void testUnauthorizedEditJustCreatedUser() {
+    public void testEditUnauthorizedUser() {
         //Создаем пользователя
         Map<String, String> userData = DataGenerator.getRegistrationData();
 
-        JsonPath responseCreateAuth = apiCoreRequests.
-                makePostRequest("https://playground.learnqa.ru/api_dev/user/", userData).jsonPath();
-
-        String userId = responseCreateAuth.getString("id");
-
+        Response responseCreateUser = apiCoreRequests
+                .makePostRequestLoginUser("https://playground.learnqa.ru/api_dev/user/", userData);
+        String userId = responseCreateUser.jsonPath().get("id");
 
         //Изменяем имя
         String newName = "Changed Name";
@@ -100,15 +98,15 @@ public class UserEditTest extends BaseTestCase {
         Assertions.assertJsonByName(responseEditUser, "error","Auth token not supplied");
     }
 
-    @Description("Ex17.2 Тест проверяет изменение имени будучи авторизованными другим пользователем")
+    @Description("Ex17.2 Negative. Тест проверяет попытку изменения данных пользователя, будучи авторизованными другим пользователем")
     @DisplayName("Тест проверяет изменение имени будучи авторизованными другим пользователем")
     @Test
-    public void testAnotherUserAuthorizeEditJustCreatedUser() {
+    public void testEditAnotherUser() {
         //Создаем пользователя
         Map<String, String> userData = DataGenerator.getRegistrationData();
 
         JsonPath responseCreateAuth = apiCoreRequests.
-                makePostRequest("https://playground.learnqa.ru/api_dev/user/", userData).jsonPath();
+                makePostRequestLoginUser("https://playground.learnqa.ru/api_dev/user/", userData).jsonPath();
 
         String userId = responseCreateAuth.getString("id");
 
@@ -119,7 +117,7 @@ public class UserEditTest extends BaseTestCase {
         authData.put("password", userData.get("1234"));
 
         Response responseGetAuth = apiCoreRequests.
-                makePostRequest("https://playground.learnqa.ru/api_dev/user/login/", authData);
+                makePostRequestLoginUser("https://playground.learnqa.ru/api_dev/user/login/", authData);
 
         String header = responseGetAuth.getHeader("x-csrf-token");
         String token = responseGetAuth.getCookie("auth_sid");
@@ -130,8 +128,8 @@ public class UserEditTest extends BaseTestCase {
         Map<String, String> editData = new HashMap<>();
         editData.put("firstName", newName);
 
-        Response responseEditUser = apiCoreRequests.makePutRequest(
-                "https://playground.learnqa.ru/api_dev/user/" + userId,
+        Response responseEditUser = apiCoreRequests.
+                makePutRequest("https://playground.learnqa.ru/api_dev/user/" + userId,
                 editData,
                 header,
                 token
@@ -141,15 +139,15 @@ public class UserEditTest extends BaseTestCase {
         Assertions.assertJsonByName(responseEditUser, "error","Auth token not supplied");
     }
 
-    @Description("Ex17.3 Тест проверяет изменение email на невалидный")
+    @Description("Ex17.3 Negative. Тест проверяет попытку изменения email на невалидный, будучи авторизованными тем же пользователем")
     @DisplayName("Тест проверяет изменение email на невалидный")
     @Test
-    public void testEditWrongEmailJustCreated() {
+    public void testEditInvalidEmail() {
         //Создаем пользователя
         Map<String, String> userData = DataGenerator.getRegistrationData();
 
         JsonPath responseCreateAuth = apiCoreRequests.
-                makePostRequest("https://playground.learnqa.ru/api_dev/user/", userData).jsonPath();
+                makePostRequestLoginUser("https://playground.learnqa.ru/api_dev/user/", userData).jsonPath();
 
         String userId = responseCreateAuth.getString("id");
 
@@ -160,7 +158,7 @@ public class UserEditTest extends BaseTestCase {
         authData.put("password", userData.get("password"));
 
         Response responseGetAuth = apiCoreRequests.
-                makePostRequest("https://playground.learnqa.ru/api_dev/user/login/", authData);
+                makePostRequestLoginUser("https://playground.learnqa.ru/api_dev/user/login/", authData);
 
         String header = responseGetAuth.getHeader("x-csrf-token");
         String token = responseGetAuth.getCookie("auth_sid");
@@ -171,8 +169,8 @@ public class UserEditTest extends BaseTestCase {
         Map<String, String> editData = new HashMap<>();
         editData.put("email", newEmail);
 
-        Response responseEditUser = apiCoreRequests.makePutRequest(
-                "https://playground.learnqa.ru/api_dev/user/" + userId,
+        Response responseEditUser = apiCoreRequests
+                .makePutRequest("https://playground.learnqa.ru/api_dev/user/" + userId,
                 editData,
                 header,
                 token
@@ -183,16 +181,16 @@ public class UserEditTest extends BaseTestCase {
     }
 
 
-    @Description("Ex17.4 Тест проверяет изменение имени на невалидное")
+    @Description("Ex17.4 Negative. Тест проверяет попытку изменения firstName пользователя, будучи авторизованными тем же пользователем, на очень короткое значение в один символ")
     @DisplayName("Тест проверяет изменение имени на невалидное")
     @Test
-    public void testEditWrongNameJustCreatedUser() {
+    public void testEditUserInvalidFirstName() {
         //Создаем пользователя
         Map<String, String> userData = DataGenerator.getRegistrationData();
 
         ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
         JsonPath responseCreateAuth = apiCoreRequests.
-                makePostRequest("https://playground.learnqa.ru/api_dev/user/", userData).jsonPath();
+                makePostRequestLoginUser("https://playground.learnqa.ru/api_dev/user/", userData).jsonPath();
 
         String userId = responseCreateAuth.getString("id");
 
@@ -203,7 +201,7 @@ public class UserEditTest extends BaseTestCase {
         authData.put("password", userData.get("password"));
 
         Response responseGetAuth = apiCoreRequests.
-                makePostRequest("https://playground.learnqa.ru/api_dev/user/login/", authData);
+                makePostRequestLoginUser("https://playground.learnqa.ru/api_dev/user/login/", authData);
 
         String header = responseGetAuth.getHeader("x-csrf-token");
         String token = responseGetAuth.getCookie("auth_sid");
@@ -214,8 +212,8 @@ public class UserEditTest extends BaseTestCase {
         Map<String, String> editData = new HashMap<>();
         editData.put("firstName", newName);
 
-        Response responseEditUser = apiCoreRequests.makePutRequest(
-                "https://playground.learnqa.ru/api_dev/user/" + userId,
+        Response responseEditUser = apiCoreRequests
+                .makePutRequest("https://playground.learnqa.ru/api_dev/user/" + userId,
                 editData,
                 header,
                 token
