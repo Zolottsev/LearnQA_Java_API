@@ -12,12 +12,15 @@ import lib.DataGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 @Epic("Edit user cases")
 @Feature("Edit")
 public class UserEditTest extends BaseTestCase {
+    String cookie;
+    String header;
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
     /*
      * Создаем нового пользователя с id>10 для последующего редактирования
@@ -90,8 +93,8 @@ public class UserEditTest extends BaseTestCase {
         Map<String, String> editData = new HashMap<>();
         editData.put("firstName", newName);
 
-        Response responseEditUser = apiCoreRequests.makeNoAuthPutRequest(
-                "https://playground.learnqa.ru/api_dev/user/" + userId,
+        Response responseEditUser = apiCoreRequests
+                .makeNoAuthPutRequest("https://playground.learnqa.ru/api_dev/user/" + userId,
                 editData);
 
         Assertions.assertResponseCodeEquals(responseEditUser, 400);
@@ -130,10 +133,9 @@ public class UserEditTest extends BaseTestCase {
 
         Response responseEditUser = apiCoreRequests.
                 makePutRequest("https://playground.learnqa.ru/api_dev/user/" + userId,
-                editData,
-                header,
-                token
-        );
+                        editData,
+                        header,
+                        token);
 
         Assertions.assertResponseCodeEquals(responseEditUser, 400);
         Assertions.assertJsonByName(responseEditUser, "error","Auth token not supplied");
@@ -151,7 +153,6 @@ public class UserEditTest extends BaseTestCase {
 
         String userId = responseCreateAuth.getString("id");
 
-
         //Авторизируемся
         Map<String, String> authData = new HashMap<>();
         authData.put("email", userData.get("email"));
@@ -162,7 +163,6 @@ public class UserEditTest extends BaseTestCase {
 
         String header = responseGetAuth.getHeader("x-csrf-token");
         String token = responseGetAuth.getCookie("auth_sid");
-
 
         //Изменяем имя
         String newEmail = "amail.ru";
@@ -193,7 +193,6 @@ public class UserEditTest extends BaseTestCase {
                 makePostRequestLoginUser("https://playground.learnqa.ru/api_dev/user/", userData).jsonPath();
 
         String userId = responseCreateAuth.getString("id");
-
 
         //Авторизируемся
         Map<String, String> authData = new HashMap<>();

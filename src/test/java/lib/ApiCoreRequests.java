@@ -67,6 +67,16 @@ public class ApiCoreRequests {
                 .put(url)
                 .andReturn();
     }
+    @Step("Make a PUT-request to edit non auth user")
+    public Response makePutRequestForNoAuthUser(String url, Map<String, String> editData, String wrongToken, String wrongCookie) {
+        return given()
+                .filter(new AllureRestAssured())
+                .body(editData)
+                .header(new Header("x-csrf-token", wrongToken))
+                .cookie("auth_sid", wrongCookie)
+                .put(url)
+                .andReturn();
+    }
 
     @Step("Make a DELETE-request with auth data")
     public Response makeDeleteRequest(String url,  Map<String, String> deleteData, String token, String cookie) {
