@@ -36,7 +36,7 @@ public class UserRegisterTest extends BaseTestCase {
         userData = getRegistrationData(userData);
 
         Response responseCreateAuth = apiCoreRequests
-                .makePostRequest("https://playground.learnqa.ru/api/user/", userData);
+                .makePostRequest("https://playground.learnqa.ru/api_dev/user/", userData);
 
         Assertions.assertResponseCodeEquals(responseCreateAuth, 400);
         Assertions.assertResponseTextEquals(responseCreateAuth, "Users with email '"+ email + "' already exists");
@@ -54,7 +54,7 @@ public class UserRegisterTest extends BaseTestCase {
         * */
         Map<String, String> userData = getRegistrationData();
         Response responseCreateAuth = apiCoreRequests
-                .makePostRequest("https://playground.learnqa.ru/api/user/", userData);
+                .makePostRequest("https://playground.learnqa.ru/api_dev/user/", userData);
 
         Assertions.assertResponseCodeEquals(responseCreateAuth, 200);
         Assertions.assertJsonHasField(responseCreateAuth, "id");
@@ -70,7 +70,7 @@ public class UserRegisterTest extends BaseTestCase {
         userData.put("email", email);
         userData = getRegistrationData(userData);
         Response responseCreateAuth = apiCoreRequests
-                .makePostRequest("https://playground.learnqa.ru/api/user/", userData);
+                .makePostRequest("https://playground.learnqa.ru/api_dev/user/", userData);
 
         Assertions.assertResponseCodeEquals(responseCreateAuth, 400);
         Assertions.assertResponseTextEquals(responseCreateAuth, "Invalid email format");
@@ -93,7 +93,7 @@ public class UserRegisterTest extends BaseTestCase {
 
         Map<String, String> userData = getRegistrationData(nonDefaultValues);
         Response responseCreateAuth = apiCoreRequests
-                .makePostRequest("https://playground.learnqa.ru/api/user/", userData);
+                .makePostRequest("https://playground.learnqa.ru/api_dev/user/", userData);
 
         Assertions.assertResponseCodeEquals(responseCreateAuth, 400);
         Assertions.assertResponseTextEquals(responseCreateAuth, "The value of '"+ emptyValue +"' field is too short");
@@ -109,7 +109,7 @@ public class UserRegisterTest extends BaseTestCase {
         userData.put("firstName", firstName);
         userData = getRegistrationData(userData);
         Response responseCreateAuth = apiCoreRequests
-                .makePostRequest("https://playground.learnqa.ru/api/user/", userData);
+                .makePostRequest("https://playground.learnqa.ru/api_dev/user/", userData);
 
         Assertions.assertResponseCodeEquals(responseCreateAuth, 400);
         Assertions.assertResponseTextEquals(responseCreateAuth, "The value of 'firstName' field is too short");
@@ -127,7 +127,7 @@ public class UserRegisterTest extends BaseTestCase {
         userData.put("firstName", firstName);
         userData = getRegistrationData(userData);
         Response responseCreateAuth = apiCoreRequests
-                .makePostRequest("https://playground.learnqa.ru/api/user/", userData);
+                .makePostRequest("https://playground.learnqa.ru/api_dev/user/", userData);
 
         Assertions.assertResponseCodeEquals(responseCreateAuth, 400);
         Assertions.assertResponseTextEquals(responseCreateAuth, "The value of 'firstName' field is too long");
