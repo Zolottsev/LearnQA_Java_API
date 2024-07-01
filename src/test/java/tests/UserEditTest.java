@@ -74,7 +74,7 @@ public class UserEditTest extends BaseTestCase {
         Assertions.assertJsonByName(responseUserData, "firstName", newName);
     }
 
-    @Description("Тест проверяет изменение имени у НЕ авторизированного пользователя")
+    @Description("Ex17.1 Тест проверяет изменение имени у НЕ авторизированного пользователя")
     @DisplayName("Тест проверяет изменение имени у НЕ авторизированного пользователя")
     @Test
     public void testUnauthorizedEditJustCreatedUser() {
@@ -100,8 +100,8 @@ public class UserEditTest extends BaseTestCase {
         Assertions.assertJsonByName(responseEditUser, "error","Auth token not supplied");
     }
 
-    @Description("Тест проверяет изменение имени у авторизированного другого пользователя")
-    @DisplayName("Тест проверяет изменение имени у авторизированного другого пользователя")
+    @Description("Ex17.2 Тест проверяет изменение имени будучи авторизованными другим пользователем")
+    @DisplayName("Тест проверяет изменение имени будучи авторизованными другим пользователем")
     @Test
     public void testAnotherUserAuthorizeEditJustCreatedUser() {
         //Создаем пользователя
@@ -141,7 +141,7 @@ public class UserEditTest extends BaseTestCase {
         Assertions.assertJsonByName(responseEditUser, "error","Auth token not supplied");
     }
 
-    @Description("Тест проверяет изменение email на невалидный")
+    @Description("Ex17.3 Тест проверяет изменение email на невалидный")
     @DisplayName("Тест проверяет изменение email на невалидный")
     @Test
     public void testEditWrongEmailJustCreated() {
@@ -183,7 +183,7 @@ public class UserEditTest extends BaseTestCase {
     }
 
 
-    @Description("Тест проверяет изменение имени на невалидное")
+    @Description("Ex17.4 Тест проверяет изменение имени на невалидное")
     @DisplayName("Тест проверяет изменение имени на невалидное")
     @Test
     public void testEditWrongNameJustCreatedUser() {
