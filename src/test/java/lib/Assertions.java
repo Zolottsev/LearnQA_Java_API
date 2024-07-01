@@ -70,6 +70,4 @@ public class Assertions {
         public static void assertJsonHasNotField(Response Response, String unexpectedFieldName) {
             Response.then().assertThat().body("$", not(hasKey(unexpectedFieldName)));
         }
-
-
 }
