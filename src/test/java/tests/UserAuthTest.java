@@ -30,6 +30,7 @@ public class UserAuthTest extends BaseTestCase {
         Map<String, String> authData = new HashMap<>();
         authData.put("email", "vinkotov@example.com");
         authData.put("password", "1234");
+
         Response responseGetAuth = apiCoreRequests
                 .makePostRequest("https://playground.learnqa.ru/api_dev/user/login", authData);
 
@@ -44,10 +45,7 @@ public class UserAuthTest extends BaseTestCase {
     public void testAuthUser() {
         /*
          * Разберем получившуюся строку на несколько нужных нам параметров
-         * Проверяем, что мы действительно залогинились.
-         * Тип возвращаемого значения Response, так как не работаем с JSON напрямую,
-         * вся работа в методе BaseTestcase
-         */
+        */
         Response responseCheckAuth = apiCoreRequests
                 .makeGetRequest("https://playground.learnqa.ru/api_dev/user/auth",
                                 this.header,

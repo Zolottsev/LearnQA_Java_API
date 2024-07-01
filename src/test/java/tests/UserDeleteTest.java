@@ -17,7 +17,7 @@ import java.util.Map;
 @Feature("Ex18: Тесты на DELETE")
 public class UserDeleteTest  extends BaseTestCase{
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
-    @Description("Тест проверяет невозможность удаления пользоваетля с ID = 2")
+    @Description("Ex18.1 Negative. Тест проверяет невозможность удаления пользоваетля с ID = 2")
     @DisplayName("Тест  на попытку удалить пользователя по ID 2")
     @Test
     public void testDeleteOldUserWithoutAuth() {
@@ -45,7 +45,7 @@ public class UserDeleteTest  extends BaseTestCase{
     }
 
 
-    @Description("Тест проверяет удаление авторизированного пользователя")
+    @Description("Ex18.2 Тест проверяет удаление авторизированного пользователя")
     @DisplayName("Тест проверяет удаление авторизированного пользователя")
     @Test
     public void testDeleteNewUserWithAuth() {
@@ -56,7 +56,6 @@ public class UserDeleteTest  extends BaseTestCase{
                 makePostRequest("https://playground.learnqa.ru/api_dev/user/", userData).jsonPath();
 
         String userId = responseCreateAuth.getString("id");
-
 
         //Авторизируемся
         Map<String, String> authData = new HashMap<>();
@@ -78,7 +77,7 @@ public class UserDeleteTest  extends BaseTestCase{
                 );
 
 
-        //Получаем данные пользователя
+        //Пробуем получить данные удаленного пользователя
         Response responseUserData = apiCoreRequests.
                 makeGetRequest("https://playground.learnqa.ru/api_dev/user/" + userId,
                         header,
@@ -90,7 +89,7 @@ public class UserDeleteTest  extends BaseTestCase{
     }
 
 
-    @Description("Тест проверяет удаление пользователя, будучи авторизованными под другим пользователем")
+    @Description("Ex18.3 Negative. Тест проверяет удаление пользователя, будучи авторизованными под другим пользователем")
     @DisplayName("Тест проверяет удаление другого пользователя")
     @Test
     public void testDeleteNewUserWithAnotherAuth() {
