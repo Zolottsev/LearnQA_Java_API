@@ -1,18 +1,16 @@
 package tests;
 
 import io.qameta.allure.Description;
-import io.qameta.allure.Severity;
-import io.qameta.allure.SeverityLevel;
-import io.qameta.allure.TmsLink;
+
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.Assertions;
 import lib.BaseTestCase;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,20 +69,23 @@ public class UserGetTest extends BaseTestCase {
         Map<String, String> authData = new HashMap<>();
         authData.put("email", "vinkotov@example.com");
         authData.put("password", "1234");
+
         Response responseGetAuth = apiCoreRequests
                 .makePostRequest("https://playground.learnqa.ru/api_dev/user/login", authData);
 
         this.cookie = this.getCookie(responseGetAuth, "auth_sid");
         this.header = this.getHeader(responseGetAuth, "x-csrf-token");
+
+        //Получаем данные другого пользователя
         Response responseUserData = apiCoreRequests
                 .makeGetRequest("https://playground.learnqa.ru/api_dev/user/1",
                         this.header,
                         this.cookie
                 );
 
-        Assertions.assertJsonHasField(responseUserData, "username");
-        Assertions.assertJsonHasNotField(responseUserData, "firstName");
-        Assertions.assertJsonHasNotField(responseUserData, "lastName");
-        Assertions.assertJsonHasNotField(responseUserData, "email");
+        String[] expectedFields = {"username"};
+        String[] unExpectedFields = {"password", "firstName", "lastName", "email"};
+        Assertions.assertJsonHasFields(responseUserData, expectedFields);
+        Assertions.assertJsonHasNotField(responseUserData, Arrays.toString(unExpectedFields));
     }
 }

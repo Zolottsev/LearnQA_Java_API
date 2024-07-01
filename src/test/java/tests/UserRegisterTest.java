@@ -60,7 +60,7 @@ public class UserRegisterTest extends BaseTestCase {
         Assertions.assertJsonHasField(responseCreateAuth, "id");
     }
 
-    @Description("Тест проверяет невозможность создания пользователя с некорректным email")
+    @Description("Ex15 Тест проверяет невозможность создания пользователя с некорректным email")
     @DisplayName("Тест проверяет невозможность создания пользователя с некорректным email")
     @Test
     public void testCreateUserWithIncorrectEmail() {
@@ -76,7 +76,7 @@ public class UserRegisterTest extends BaseTestCase {
         Assertions.assertResponseTextEquals(responseCreateAuth, "Invalid email format");
     }
 
-    @Description("Тест проверяет невозможность создания пользователя  без указания одного из полей")
+    @Description("Ex15 Тест проверяет невозможность создания пользователя  без указания одного из полей")
     @DisplayName("Тест проверяет невозможность создания пользователя  без указания одного из полей")
     @ParameterizedTest
     @CsvSource({
@@ -99,7 +99,7 @@ public class UserRegisterTest extends BaseTestCase {
         Assertions.assertResponseTextEquals(responseCreateAuth, "The value of '"+ emptyValue +"' field is too short");
     }
 
-    @Description("Тест проверяет невозможность создания пользователя  с очень коротким именем в один символ")
+    @Description("Ex15 Тест проверяет невозможность создания пользователя  с очень коротким именем в один символ")
     @DisplayName("Тест проверяет невозможность создания пользователя  с очень коротким именем в один символ")
     @Test
     public void testCreateUserWithShortName() {
@@ -115,7 +115,7 @@ public class UserRegisterTest extends BaseTestCase {
         Assertions.assertResponseTextEquals(responseCreateAuth, "The value of 'firstName' field is too short");
     }
 
-    @Description("Тест проверяет невозможность создания пользователя с именем, длиннее 250 символов")
+    @Description("Ex15 Тест проверяет невозможность создания пользователя с именем, длиннее 250 символов")
     @DisplayName("Тест проверяет невозможность создания пользователя с именем, длиннее 250 символов")
     @Test
     public void testCreateUserWithLongName() {
