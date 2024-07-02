@@ -98,35 +98,39 @@ public class UserDeleteTest  extends BaseTestCase{
     @DisplayName("Тест проверяет удаление другого пользователя")
     @Test
     public void testDeleteNewUserWithAnotherAuth() {
-        //Создаем пользователя
-        Map<String, String> userData = DataGenerator.getRegistrationData();
+        //Создаем пользователя 1
+        Map<String, String> user1Data = DataGenerator.getRegistrationData();
 
-        Response responseCreateUser = apiCoreRequests
-                .makePostRequestLoginUser("https://playground.learnqa.ru/api_dev/user/", userData);
+        Response responseCreateUser1 = apiCoreRequests
+                .makePostRequestLoginUser("https://playground.learnqa.ru/api_dev/user/", user1Data);
 
-        String userId = responseCreateUser.jsonPath().get("id");
+        String user1Id = responseCreateUser1.jsonPath().get("id");
 
-        //Авторизируемся
+        //Создаем пользователя 2
+        Map<String, String> user2Data = DataGenerator.getRegistrationData();
+
+        Response responseCreateUser2 = apiCoreRequests
+                .makePostRequestLoginUser("https://playground.learnqa.ru/api_dev/user/", user2Data);
+
+        //Авторизируемся под пользователем 2
         Map<String, String> authData = new HashMap<>();
-        authData.put("email", "vinkotov@example.com");
-        authData.put("password", "1234");
+        authData.put("email", user2Data.get("email"));
+        authData.put("password", user2Data.get("password"));
 
-        Response responseGetAuth = apiCoreRequests.
+        Response responseGetAuthUser2 = apiCoreRequests.
                 makePostRequestLoginUser("https://playground.learnqa.ru/api_dev/user/login/", authData);
 
-        String cookie = this.getCookie(responseGetAuth, "auth_sid");
-        String token = this.getHeader(responseGetAuth, "x-csrf-token");
+        String cookie = this.getCookie(responseGetAuthUser2, "auth_sid");
+        String token = this.getHeader(responseGetAuthUser2, "x-csrf-token");
 
         //Удаляем
         Response responseDeleteUser = apiCoreRequests.
-                makeDeleteRequestForDeleteAnotherUser("https://playground.learnqa.ru/api_dev/user/" + userId,
+                makeDeleteRequestForDeleteAnotherUser("https://playground.learnqa.ru/api_dev/user/" + user1Id,
                         token,
                         cookie
                 );
 
-        //Assertions.assertResponseTextEquals(responseDeleteUser, "{\"error\":\"Please, do not delete test users with ID 1, 2, 3, 4 or 5.\"}");
         Assertions.assertResponseCodeEquals(responseDeleteUser, 400);
-        Assertions.assertJsonByName(responseDeleteUser,"error", "Please, do not delete test users with ID 1, 2, 3, 4 or 5.");
-
+        Assertions.assertJsonByName(responseDeleteUser,"error", "This user can only delete their own account.");
     }
 }
