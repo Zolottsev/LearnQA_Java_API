@@ -21,6 +21,8 @@ public class UserDeleteTest  extends BaseTestCase{
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
     @Description("Ex18.1 Negative. Тест проверяет невозможность удаления пользоваетля с ID = 2")
     @DisplayName("Тест на попытку удалить пользователя по ID 2")
+    @TmsLink(value = "TL-01")
+    @Owner(value = "DLZolottsev")
     @Test
     public void testDeleteOldUserWithoutAuth() {
         //Авторизируемся
@@ -50,6 +52,7 @@ public class UserDeleteTest  extends BaseTestCase{
 
     @Description("Ex18.2 Тест проверяет удаление авторизированного пользователя")
     @DisplayName("Тест проверяет удаление авторизированного пользователя")
+    @TmsLink(value = "TL-02")
     @Test
     public void testDeleteNewUserWithAuth() {
         //Создаем пользователя
@@ -95,6 +98,8 @@ public class UserDeleteTest  extends BaseTestCase{
 //api_dev
     @Description("Ex18.3 Negative. Тест проверяет удаление пользователя, будучи авторизованными под другим пользователем")
     @DisplayName("Тест проверяет удаление пользователя, будучи авторизованными под другим пользователем")
+    @TmsLink(value = "TL-03")
+    @Issue(value = "BTS-1")
     @Test
     public void testDeleteNewUserWithAnotherAuth() {
         //Создаем пользователя 1
@@ -122,7 +127,7 @@ public class UserDeleteTest  extends BaseTestCase{
         String header = this.getHeader(responseGetAuthUser2, "x-csrf-token");
         String cookie = this.getCookie(responseGetAuthUser2, "auth_sid");
 
-        //Удаляем
+        //Удаляем пользователя 1
         Response responseDeleteUser = apiCoreRequests.
                 makeDeleteRequestForDeleteAnotherUser("https://playground.learnqa.ru/api_dev/user/" + user1Id,
                         header,
