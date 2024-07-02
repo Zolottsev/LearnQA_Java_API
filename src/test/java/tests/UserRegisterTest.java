@@ -30,7 +30,9 @@ public class UserRegisterTest extends BaseTestCase {
     public void testCreateUserWithExistingEmail() {
 
         String email = "vinkotov@examle.com";
-
+        /*
+        * Данные берем из генератора и наш существующий email
+        * */
         Map<String, String> userData = new HashMap<>();
         userData.put("email", email);
         userData = getRegistrationData(userData);

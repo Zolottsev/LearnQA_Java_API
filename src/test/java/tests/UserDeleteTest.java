@@ -1,7 +1,6 @@
 package tests;
 
 import io.qameta.allure.*;
-import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.Assertions;
@@ -21,7 +20,7 @@ public class UserDeleteTest  extends BaseTestCase{
     int userIdOnAuth;
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
     @Description("Ex18.1 Negative. Тест проверяет невозможность удаления пользоваетля с ID = 2")
-    @DisplayName("Тест  на попытку удалить пользователя по ID 2")
+    @DisplayName("Тест на попытку удалить пользователя по ID 2")
     @Test
     public void testDeleteOldUserWithoutAuth() {
         //Авторизируемся
@@ -93,9 +92,9 @@ public class UserDeleteTest  extends BaseTestCase{
 
     }
 
-
+//api_dev
     @Description("Ex18.3 Negative. Тест проверяет удаление пользователя, будучи авторизованными под другим пользователем")
-    @DisplayName("Тест проверяет удаление другого пользователя")
+    @DisplayName("Тест проверяет удаление пользователя, будучи авторизованными под другим пользователем")
     @Test
     public void testDeleteNewUserWithAnotherAuth() {
         //Создаем пользователя 1
@@ -120,13 +119,13 @@ public class UserDeleteTest  extends BaseTestCase{
         Response responseGetAuthUser2 = apiCoreRequests.
                 makePostRequestLoginUser("https://playground.learnqa.ru/api_dev/user/login/", authData);
 
+        String header = this.getHeader(responseGetAuthUser2, "x-csrf-token");
         String cookie = this.getCookie(responseGetAuthUser2, "auth_sid");
-        String token = this.getHeader(responseGetAuthUser2, "x-csrf-token");
 
         //Удаляем
         Response responseDeleteUser = apiCoreRequests.
                 makeDeleteRequestForDeleteAnotherUser("https://playground.learnqa.ru/api_dev/user/" + user1Id,
-                        token,
+                        header,
                         cookie
                 );
 
