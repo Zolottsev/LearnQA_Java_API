@@ -3,6 +3,7 @@ package tests;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.Owner;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
@@ -79,6 +80,7 @@ public class UserEditTest extends BaseTestCase {
 
     @Description("Ex17.1 Negative. Тест проверяет попытку изменения данных пользователя, будучи неавторизованными")
     @DisplayName("Тест проверяет попытку изменения данных пользователя, будучи неавторизованными")
+    @Owner(value = "DLZolottsev")
     @Test
     public void testEditUnauthorizedUser() {
         //Создаем пользователя
@@ -103,6 +105,7 @@ public class UserEditTest extends BaseTestCase {
 
     @Description("Ex17.2 Negative. Тест проверяет попытку изменения данных пользователя, будучи авторизованными другим пользователем")
     @DisplayName("Тест проверяет изменение имени будучи авторизованными другим пользователем")
+    @Owner(value = "DLZolottsev")
     @Test
     public void testEditAnotherUser() {
         //Создаем пользователя
@@ -143,6 +146,7 @@ public class UserEditTest extends BaseTestCase {
 
     @Description("Ex17.3 Negative. Тест проверяет попытку изменения email на невалидный, будучи авторизованными тем же пользователем")
     @DisplayName("Тест проверяет изменение email на невалидный")
+    @Owner(value = "DLZolottsev")
     @Test
     public void testEditInvalidEmail() {
         //Создаем пользователя
@@ -183,6 +187,7 @@ public class UserEditTest extends BaseTestCase {
 
     @Description("Ex17.4 Negative. Тест проверяет попытку изменения firstName пользователя, будучи авторизованными тем же пользователем, на очень короткое значение в один символ")
     @DisplayName("Тест проверяет изменение имени на невалидное")
+    @Owner(value = "DLZolottsev")
     @Test
     public void testEditUserInvalidFirstName() {
         //Создаем пользователя

@@ -2,6 +2,7 @@ package tests;
 
 import io.qameta.allure.Description;
 
+import io.qameta.allure.Owner;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
@@ -65,6 +66,7 @@ public class UserGetTest extends BaseTestCase {
     @Test
     @Description("Ex16 Тест проверяет, что получаем только username, когда авторизовываемся под одним пользователем, но получаем данные другого.")
     @DisplayName("Test returns only username for another user")
+    @Owner(value = "DLZolottsev")
     public void testGetUserDetailsAuthAsAnotherUser(){
         Map<String, String> authData = new HashMap<>();
         authData.put("email", "vinkotov@example.com");

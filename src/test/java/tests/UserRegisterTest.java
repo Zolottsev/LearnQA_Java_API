@@ -3,6 +3,7 @@ package tests;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.Owner;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
@@ -64,6 +65,7 @@ public class UserRegisterTest extends BaseTestCase {
 
     @Description("Ex15 Тест проверяет невозможность создания пользователя с некорректным email")
     @DisplayName("Тест проверяет невозможность создания пользователя с некорректным email")
+    @Owner(value = "DLZolottsev")
     @Test
     public void testCreateUserWithIncorrectEmail() {
         String email = "vinkotovexample.com";
@@ -103,6 +105,7 @@ public class UserRegisterTest extends BaseTestCase {
 
     @Description("Ex15 Тест проверяет невозможность создания пользователя  с очень коротким именем в один символ")
     @DisplayName("Тест проверяет невозможность создания пользователя  с очень коротким именем в один символ")
+    @Owner(value = "DLZolottsev")
     @Test
     public void testCreateUserWithShortName() {
         String firstName = "a";
@@ -119,6 +122,7 @@ public class UserRegisterTest extends BaseTestCase {
 
     @Description("Ex15 Тест проверяет невозможность создания пользователя с именем, длиннее 250 символов")
     @DisplayName("Тест проверяет невозможность создания пользователя с именем, длиннее 250 символов")
+    @Owner(value = "DLZolottsev")
     @Test
     public void testCreateUserWithLongName() {
         String firstName = "Повседневная практика показывает, что реализация намеченного плана развития требует определения" +
